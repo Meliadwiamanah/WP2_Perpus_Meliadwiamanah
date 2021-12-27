@@ -70,10 +70,10 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="<?= base_url('sayur'); ?>" method="post" enctype="multipart/form-data">
+            <form action="<?= base_url('buku'); ?>" method="post" enctype="multipart/form-data">
                 <div class="modal-body">
                     <div class="form-group">
-                        <input type="text" class="form-control form-control-user" id="nama_produk" name="nama_produk" placeholder="Masukkan Nama Produk">
+                        <input type="text" class="form-control form-control-user" id="judul_buku" name="judul_buku" placeholder="Masukkan Judul Buku">
                     </div>
                     <div class="form-group">
                         <select name="id_kategori" class="form-control form-control-user">

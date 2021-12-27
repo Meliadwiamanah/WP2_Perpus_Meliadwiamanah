@@ -146,17 +146,11 @@ class Buku extends CI_Controller
 
     function ubahKategori() // fungsi untuk update kategori sesuai id
     {
-        $id     = $this->uri->segment(3);
-        $email  = $this->session->userdata('email');
-        $data   = [
-            'judul'     => "Ubah Data Kategori",
-            'user'      => $this->db->get_where('user', ['email'    => $email])->row_array(),
-            'kategori'  => $this->ModelBuku->kategoriWhere(['id' => $id])->result_array()
-        ];
-        $this->form_validation->set_rules('kategori', 'Nama Kategori', 'required|min_length[3]', [
-            'required'      => 'Nama Kategori harus diisi.',
-            'min_length'    => 'Nama Kategori terlalu pendek.'
-        ]);
+        $data['judul'] = 'Ubah Kategori';
+        $data['user'] = $this->ModelUser->cekData(['email' => $this->session->userdata('email')])->row_array();
+        $data['buku'] = $this->ModelBuku->getBuku()->result_array();
+        $data['kategori'] = $this->ModelBuku->kategoriWhere(['id_kategori' => $this->uri->segment(3)])->result_array();
+
         if ($this->form_validation->run() == false) {
             $this->load->view('templates/header', $data);
             $this->load->view('templates/sidebar', $data);
@@ -165,16 +159,29 @@ class Buku extends CI_Controller
             $this->load->view('templates/footer');
         } else {
             $data = [
-                'kategori'  => $this->input->post('kategori', true)
+                'id_kategori' => $this->input->post('id_kategori', true),
+                'nama_kategori' => $this->input->post('nama_kategori', true)
+
             ];
-            $this->ModelBuku->updateKategori(['id' => $this->input->post('id')], $data);
-            redirect('buku/kategori', 'refresh');
+            $this->ModelSayur->updateKategori(['id_kategori' => $this->input->post('id_kategori')], $data);
+            redirect('sayur/kategori', 'refresh');
         }
     }
 
+    public function editKategori()
+    {
+        $data['judul'] = 'Edit Kategori';
+        $data['user'] = $this->ModelUser->cekData(['email' => $this->session->userdata('email')])->row_array();
+        $kategori = $this->input->post('nama_kategori');
+        $id =  $this->input->post('id_kategori');
+        $this->db->set('nama_kategori', $kategori);
+        $this->db->where('id_kategori', $id);
+        $this->db->update('kategori');
+        redirect('buku/kategori');
+    }
     function hapusKategori() // 
     {
-        $where = ['id' => $this->uri->segment(3)];
+        $where = ['id_kategori' => $this->uri->segment(3)];
         $this->ModelBuku->hapusKategori($where);
         redirect('buku/kategori');
     }
